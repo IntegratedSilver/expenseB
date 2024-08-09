@@ -6,7 +6,6 @@ using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace API.Controllers
 {
     [ApiController]
@@ -18,56 +17,45 @@ namespace API.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IEnumerable<Expenses>> GetExpense(){
+        public async Task<IEnumerable<Expense>> GetStudent(){
             var expenses = await _context.Expenses.AsNoTracking().ToListAsync();
             return expenses;
         }
-
         [HttpPost]
-        public async Task<IActionResult> Create (Expenses expense){
+        public async Task<IActionResult> Create (Expense expense){
             if (!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
             await _context.AddAsync(expense);
             var result = await _context.SaveChangesAsync();
-
             if(result > 0){
                 return Ok();
             }
             return BadRequest();
         }
-
          [HttpDelete ("{id:int}")]
     public async Task<IActionResult> Delete(int id){
         var expense = await _context.Expenses.FindAsync(id);
         if(expense == null){
             return NotFound();
         }
-
         _context.Remove(expense);
-
            var result = await _context.SaveChangesAsync();
-
            if(result > 0){
-            return Ok("Expense was deleted");
+            return Ok("Student was deleted");
            }
-        return BadRequest ("Unable to delete expense");
-
-
+        return BadRequest ("unable to delete student");
     }
-
      [HttpGet("{id:int}")]
-
-     public async Task<ActionResult<Expenses>> GetExpense(int id){
+     public async Task<ActionResult<Expense>> GetStudent(int id){
         var expense = await _context.Expenses.FindAsync(id);
         if(expense == null){
-            return NotFound("Sorry, expense was not found");
+            return NotFound("Sorry, student was not found");
         }
         return Ok(expense);
      }
        [HttpPut("{id}")]
-
-    public async Task<IActionResult> UpdateExpense(int id, Expenses expense)
+    public async Task<IActionResult> UpdateStudent(int id, Expense expense)
     {
         if(id != expense.Id)
         {
@@ -75,16 +63,7 @@ namespace API.Controllers
         }
         _context.Entry(expense).State = EntityState.Modified;
         await _context.SaveChangesAsync();
-
         return Ok();
     }
-
-
-
-
-
-
-
-
     }
 }

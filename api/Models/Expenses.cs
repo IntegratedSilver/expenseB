@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace API.Models
 {
-    public class Expenses
+    public class Expense
        {
     public int Id { get; set; }
     public string? Description { get; set; } = "";

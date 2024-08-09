@@ -13,7 +13,7 @@ namespace API.Data
 
         }
 
-        public DbSet<Expenses> Expenses {get; set;}
+        public DbSet<Expense> Expenses {get; set;}
 
         internal object AsNoTracking()
         {
