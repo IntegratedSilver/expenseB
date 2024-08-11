@@ -1,25 +1,21 @@
 import categories from "../categories";
+
 interface FilterProps {
-  onSelectedCategory: (category: string) => void;
+    onSelectCategory: (category: string) => void;
 }
-const ExpenseFilter = ({ onSelectedCategory }: FilterProps) => {
+
+
+const ExpenseFilter = ({onSelectCategory}:FilterProps) => {
   return (
     <>
-      <div className="col mb-3">
-        <select
-          className="form-select"
-          onChange={(e) => onSelectedCategory(e.target.value)}
-        >
-          <option value="">All Categories</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
+    <h1 className="text-center">Filter</h1>
+        <select className="form-select"  onChange={(e) => onSelectCategory(e.target.value)}>
+ 
+  <option value="">All categories</option>
+  {categories.map(category => <option key={category} value={category}>{category}</option>)}
+</select>
     </>
-  );
-};
+  )
+}
 
-export default ExpenseFilter;
+export default ExpenseFilter

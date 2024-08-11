@@ -3,60 +3,44 @@ import ExpenseFilter from "./components/ExpenseFilter";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
 
+
+interface Expense {
+  id: number;
+  description: string;
+  amount: number;
+  category: string;
+}
+
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [expenses, setExpenses] = useState<Expense[]>([]);
 
-  const [dummyExpensesArray, setDummyExpensesArray] = useState([
-    { id: 1, description: "", amount: 0, category: "" },
-  ]);
-  const visibleExpense = selectedCategory
-    ? dummyExpensesArray.filter((e) => e.category === selectedCategory)
-    : dummyExpensesArray;
   const handleDelete = (id: number) => {
-    setDummyExpensesArray(
-      dummyExpensesArray.filter((expense) => expense.id !== id)
-    );
+    setExpenses(expenses.filter((expense) => expense.id !== id));
   };
+
+  const handleAddExpense = (newExpense: Omit<Expense, "id">) => {
+    const newId = expenses.length ? expenses[expenses.length - 1].id + 1 : 1;
+    setExpenses([...expenses, { id: newId, ...newExpense }]);
+  };
+
+  const visibleExpenses = selectedCategory
+    ? expenses.filter((expense) => expense.category === selectedCategory)
+    : expenses;
+
   return (
     <>
-      <div className="container mainCont">
-        <h1 className="text-center my-5">Expense App</h1>
-        <div className="container">
-          <div className="container my-4 mx-4 flexCont">
-            <div className="container formCont col-4">
-              <h2 className="text-center">New Expense</h2>
-              <div className="m-4 formStyle">
-                <ExpenseForm
-                  onHelpSubmit={(expense) =>
-                    setDummyExpensesArray([
-                      ...dummyExpensesArray,
-                      { ...expense, id: dummyExpensesArray.length + 1 },
-                    ])
-                  }
-                />
-              </div>
-              <h4 className="m-4">Selected Category</h4>
-              <div className="m-4 ms-4">
-                <ExpenseFilter
-                  onSelectedCategory={(category) =>
-                    setSelectedCategory(category)
-                  }
-                />
-              </div>
-            </div>
-            <div className="container">
-              <div className="col">
-                <h2 className="text-center expenseMargin">Expense Table</h2>
-                <div className="m-5">
-                  <ExpenseList
-                    expenses={visibleExpense}
-                    onDelete={handleDelete}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <h1 className="text-center">Expense Tracker</h1>
+      <div className="m-5">
+        <ExpenseForm onAddExpense={handleAddExpense} />
+      </div>
+      <div className="m-5">
+        <ExpenseFilter
+          onSelectCategory={(category) => setSelectedCategory(category)}
+        />
+      </div>
+      <div className="m-5">
+        <ExpenseList expenses={visibleExpenses} onDelete={handleDelete} />
       </div>
     </>
   );
