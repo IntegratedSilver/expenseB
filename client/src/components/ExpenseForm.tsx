@@ -1,55 +1,75 @@
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-
-const expenseSchema = z.object({
-  description: z.string().min(1, "Description is required"),
-  amount: z.number().min(0.01, "Amount must be greater than zero"),
-  category: z.enum(["Utilities", "Entertainment", "Food", "Shopping", "Groceries"])
-});
-
-type ExpenseFormValues = z.infer<typeof expenseSchema>;
+import { useState } from 'react';
+import categories from '../categories';
 
 interface ExpenseFormProps {
-  onAddExpense: (data: ExpenseFormValues) => void;
+  onAddExpense: (newExpense: { description: string; amount: number; category: string }) => void;
 }
 
 const ExpenseForm = ({ onAddExpense }: ExpenseFormProps) => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ExpenseFormValues>({
-    resolver: zodResolver(expenseSchema)
-  });
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
+  const [category, setCategory] = useState('');
 
-  const onSubmit = (data: ExpenseFormValues) => {
-    onAddExpense(data);
-    reset(); 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const newExpense = {
+      description,
+      amount: parseFloat(amount),
+      category,
+    };
+
+    onAddExpense(newExpense);
+    setDescription('');
+    setAmount('');
+    setCategory('');
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="form-group">
-        <label>Description</label>
-        <input className="form-control" {...register("description")} />
-        {errors.description && <p className="text-danger">{errors.description.message}</p>}
+    <form onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="description" className="form-label">
+          Description
+        </label>
+        <input
+          id="description"
+          type="text"
+          className="form-control"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
       </div>
-      <div className="form-group">
-        <label>Amount</label>
-        <input type="number" className="form-control" {...register("amount", { valueAsNumber: true })} />
-        {errors.amount && <p className="text-danger">{errors.amount.message}</p>}
+      <div className="mb-3">
+        <label htmlFor="amount" className="form-label">
+          Amount
+        </label>
+        <input
+          id="amount"
+          type="number"
+          className="form-control"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
       </div>
-      <div className="form-group">
-        <label>Category</label>
-        <select className="form-control" {...register("category")}>
-          <option value="">Select Category</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Food">Food</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Groceries">Groceries</option>
+      <div className="mb-3">
+        <label htmlFor="category" className="form-label">
+          Category
+        </label>
+        <select
+          id="category"
+          className="form-select"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value=""></option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </select>
-        {errors.category && <p className="text-danger">{errors.category.message}</p>}
       </div>
-      <button type="submit" className="btn btn-primary mt-3">Add Item</button>
+      <button className="btn btn-outline-primary">Submit</button>
     </form>
   );
 };
