@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import ExpenseFilter from "./components/ExpenseFilter";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
@@ -14,19 +15,47 @@ interface Expense {
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get('https://localhost:5159/api/Expense')
+      .then(response => {
+        setExpenses(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching expenses:', error);
+        setLoading(false);
+      });
+  }, []);
 
   const handleDelete = (id: number) => {
-    setExpenses(expenses.filter((expense) => expense.id !== id));
+    axios.delete(`https://localhost:5159/api/Expense/${id}`)
+      .then(() => {
+        setExpenses(expenses.filter((expense) => expense.id !== id));
+      })
+      .catch(error => {
+        console.error('Error deleting expense:', error);
+      });
   };
 
   const handleAddExpense = (newExpense: Omit<Expense, "id">) => {
-    const newId = expenses.length ? expenses[expenses.length - 1].id + 1 : 1;
-    setExpenses([...expenses, { id: newId, ...newExpense }]);
+    axios.post('https://localhost:5159/api/Expense', newExpense)
+      .then(response => {
+        setExpenses([...expenses, response.data]);
+      })
+      .catch(error => {
+        console.error('Error adding expense:', error);
+      });
   };
 
   const visibleExpenses = selectedCategory
     ? expenses.filter((expense) => expense.category === selectedCategory)
     : expenses;
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>

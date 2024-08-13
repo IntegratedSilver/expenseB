@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import categories from '../categories';
+import { useState } from "react";
+import categories from "../categories";
 
 interface ExpenseFormProps {
   onAddExpense: (newExpense: { description: string; amount: number; category: string }) => void;
@@ -19,10 +19,14 @@ const ExpenseForm = ({ onAddExpense }: ExpenseFormProps) => {
       category,
     };
 
-    onAddExpense(newExpense);
-    setDescription('');
-    setAmount('');
-    setCategory('');
+    try {
+      await onAddExpense(newExpense); 
+      setDescription('');
+      setAmount('');
+      setCategory('');
+    } catch (error) {
+      console.error("Error adding expense:", error);
+    }
   };
 
   return (
@@ -37,6 +41,7 @@ const ExpenseForm = ({ onAddExpense }: ExpenseFormProps) => {
           className="form-control"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          required
         />
       </div>
       <div className="mb-3">
@@ -49,6 +54,7 @@ const ExpenseForm = ({ onAddExpense }: ExpenseFormProps) => {
           className="form-control"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          required
         />
       </div>
       <div className="mb-3">
@@ -60,8 +66,9 @@ const ExpenseForm = ({ onAddExpense }: ExpenseFormProps) => {
           className="form-select"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
+          required
         >
-          <option value=""></option>
+          <option value="">Select a category</option>
           {categories.map((category) => (
             <option key={category} value={category}>
               {category}
@@ -69,7 +76,7 @@ const ExpenseForm = ({ onAddExpense }: ExpenseFormProps) => {
           ))}
         </select>
       </div>
-      <button className="btn btn-outline-primary">Submit</button>
+      <button className="btn btn-outline-primary" type="submit">Submit</button>
     </form>
   );
 };

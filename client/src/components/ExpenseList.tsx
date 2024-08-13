@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface Expense {
   id: number;
   description: string;
@@ -10,8 +12,8 @@ interface ExpenseProps {
   onDelete: (id: number) => void;
 }
 
-const ExpenseList = ({ expenses, onDelete }: ExpenseProps) => {
-  if (expenses.length === 0) return null;
+const ExpenseList: React.FC<ExpenseProps> = ({ expenses, onDelete }) => {
+  if (expenses.length === 0) return <p>No expenses found. Please add some!</p>;
 
   return (
     <>
@@ -28,7 +30,7 @@ const ExpenseList = ({ expenses, onDelete }: ExpenseProps) => {
           {expenses.map((expense) => (
             <tr key={expense.id}>
               <td>{expense.description}</td>
-              <td>{expense.amount}</td>
+              <td>{expense.amount.toFixed(2)}</td>
               <td>{expense.category}</td>
               <td>
                 <button
