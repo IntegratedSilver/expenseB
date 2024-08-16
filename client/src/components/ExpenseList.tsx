@@ -20,6 +20,7 @@ const ExpenseList: React.FC<ExpenseProps> = ({ expenses, onDelete }) => {
       <table className="table table-dark table-bordered">
         <thead>
           <tr>
+            <th scope="col">Id</th>
             <th scope="col">Description</th>
             <th scope="col">Amount</th>
             <th scope="col">Category</th>
@@ -29,8 +30,9 @@ const ExpenseList: React.FC<ExpenseProps> = ({ expenses, onDelete }) => {
         <tbody>
           {expenses.map((expense) => (
             <tr key={expense.id}>
+              <td>{expense.id}</td>
               <td>{expense.description}</td>
-              <td>{expense.amount.toFixed(2)}</td>
+              <td>{expense.amount}</td>
               <td>{expense.category}</td>
               <td>
                 <button
@@ -45,8 +47,9 @@ const ExpenseList: React.FC<ExpenseProps> = ({ expenses, onDelete }) => {
         </tbody>
         <tfoot>
           <tr>
+            <td></td>
             <td>Total</td>
-            <td>{expenses.reduce((acc, expense) => expense.amount + acc, 0).toFixed(2)}</td>
+            <td>{expenses.reduce((acc, expense) => expense.amount + acc, '')}</td>
             <td></td>
             <td></td>
           </tr>

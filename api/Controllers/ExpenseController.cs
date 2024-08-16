@@ -42,15 +42,15 @@ namespace API.Controllers
         _context.Remove(expense);
            var result = await _context.SaveChangesAsync();
            if(result > 0){
-            return Ok("Student was deleted");
+            return Ok("Expense was deleted");
            }
-        return BadRequest ("unable to delete student");
+        return BadRequest ("unable to delete expense");
     }
      [HttpGet("{id:int}")]
      public async Task<ActionResult<Expense>> GetStudent(int id){
         var expense = await _context.Expenses.FindAsync(id);
         if(expense == null){
-            return NotFound("Sorry, student was not found");
+            return NotFound("Sorry, expense was not found");
         }
         return Ok(expense);
      }

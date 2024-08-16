@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import ExpenseFilter from "./components/ExpenseFilter";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
+import { BASE_URL } from "./constant";
 
 
 interface Expense {
@@ -18,7 +19,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('https://localhost:5159/api/Expense')
+    axios.get(BASE_URL + 'Expense')
       .then(response => {
         setExpenses(response.data);
         setLoading(false);
@@ -30,7 +31,7 @@ const App = () => {
   }, []);
 
   const handleDelete = (id: number) => {
-    axios.delete(`https://localhost:5159/api/Expense/${id}`)
+    axios.delete(`${BASE_URL}Expense/${id}`)
       .then(() => {
         setExpenses(expenses.filter((expense) => expense.id !== id));
       })
@@ -40,15 +41,15 @@ const App = () => {
   };
 
   const handleAddExpense = (newExpense: Omit<Expense, "id">) => {
-    axios.post('https://localhost:5159/api/Expense', newExpense)
+    axios.post('http://localhost:5159/api/Expense', newExpense)
       .then(response => {
-        setExpenses([...expenses, response.data]);
+        setExpenses([response.data,...expenses]);
       })
       .catch(error => {
         console.error('Error adding expense:', error);
       });
   };
-
+  
   const visibleExpenses = selectedCategory
     ? expenses.filter((expense) => expense.category === selectedCategory)
     : expenses;
