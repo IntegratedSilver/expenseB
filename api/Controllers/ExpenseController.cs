@@ -17,7 +17,7 @@ namespace API.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IEnumerable<Expense>> GetStudent(){
+        public async Task<IEnumerable<Expense>> GetExpense(){
             var expenses = await _context.Expenses.AsNoTracking().ToListAsync();
             return expenses;
         }
@@ -47,7 +47,7 @@ namespace API.Controllers
         return BadRequest ("unable to delete expense");
     }
      [HttpGet("{id:int}")]
-     public async Task<ActionResult<Expense>> GetStudent(int id){
+     public async Task<ActionResult<Expense>> GetExpense(int id){
         var expense = await _context.Expenses.FindAsync(id);
         if(expense == null){
             return NotFound("Sorry, expense was not found");
@@ -55,7 +55,7 @@ namespace API.Controllers
         return Ok(expense);
      }
        [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateStudent(int id, Expense expense)
+    public async Task<IActionResult> UpdateExpense(int id, Expense expense)
     {
         if(id != expense.Id)
         {

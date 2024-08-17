@@ -32,7 +32,7 @@ const ExpenseList: React.FC<ExpenseProps> = ({ expenses, onDelete }) => {
             <tr key={expense.id}>
               <td>{expense.id}</td>
               <td>{expense.description}</td>
-              <td>{expense.amount}</td>
+              <td>${expense.amount}</td>
               <td>{expense.category}</td>
               <td>
                 <button
@@ -49,7 +49,7 @@ const ExpenseList: React.FC<ExpenseProps> = ({ expenses, onDelete }) => {
           <tr>
             <td></td>
             <td>Total</td>
-            <td>{expenses.reduce((acc, expense) => expense.amount + acc, '')}</td>
+            <td>${expenses.reduce((acc, expense) => expense.amount + acc, '')}</td>
             <td></td>
             <td></td>
           </tr>
